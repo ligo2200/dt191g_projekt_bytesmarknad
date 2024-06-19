@@ -22,6 +22,26 @@ public class HomeController : Controller
     {
         return View();
     }
+    [Route("/överdelar")]
+    public IActionResult Tops()
+    {
+        return View();
+    }
+    [Route("/underdelar")]
+    public IActionResult Bottoms()
+    {
+        return View();
+    }
+    [Route("/skor")]
+    public IActionResult Shoes()
+    {
+        return View();
+    }
+    [Route("/badkläder")]
+    public IActionResult Swimsuits()
+    {
+        return View();
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
