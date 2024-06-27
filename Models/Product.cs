@@ -30,22 +30,25 @@ namespace admin.Models {
         
 
         // for images
+        [Display(Name = "Bild")]
         public string? ImageName { get; set; }
 
         [NotMapped]
         [Display(Name = "Bild")]
         public IFormFile? ImageFile { get; set; }
 
-
+        [Display(Name = "Såld")]
         public bool IsSold { get; set; } = false;
 
 
         //reference to Sellermodel
         public int SellerId { get; set; }
+        [Display(Name = "Säljare")]
         public Seller? Seller { get; set; }
 
         // reference to Categorymodel
         public int CategoryId { get; set; }
+        [Display(Name = "Kategori")]
         public Category? Category{ get; set; }
 
     }

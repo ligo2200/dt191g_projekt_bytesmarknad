@@ -8,12 +8,15 @@ namespace admin.Models {
         public int SellerId { get; set; }
 
         [Required]
+        [Display(Name = "Namn")]
         public string? SellerName { get; set; }
 
         [Required]
+        [Display(Name = "Telefonnummer")]
         public string? SellerPhoneNumber { get; set; }
 
         [Required]
+        [Display(Name = "Adress")]
         public string? SellerAdress { get; set; }
 
         // relation to Clothing

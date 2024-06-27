@@ -8,6 +8,8 @@ namespace admin.Models
     public class Category
     {
         public int CategoryId { get; set; }
+
+        [Display(Name = "Kategorinamn")]
         public string? Name { get; set; }  // Ex: "Overdel", "Underdel", "Skor"
         public ICollection<Product>? Products { get; set; }
     }
