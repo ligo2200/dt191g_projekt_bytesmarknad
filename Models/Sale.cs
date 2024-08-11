@@ -13,8 +13,15 @@ namespace admin.Models {
         [Display(Name = "Säljpris")]
         public int SalePrice { get; set; }
 
+        [Display(Name = "Köparens namn")]
+        public string? BuyerName { get; set; }
+        
+        [Display(Name = "Köparens adress")]
+        public string? BuyerAdress { get; set; }
+
 
         //reference to clothingmodel
+        [Display(Name = "Produkt")]
         public int ProductId { get; set; }
 
         [Display(Name = "Produkt")]
@@ -22,9 +29,11 @@ namespace admin.Models {
 
 
         // reference to Sellermodel
+        [Display(Name = "Säljare")]
         public int SellerId { get; set; }
 
         [Display(Name = "Säljare")]
         public Seller? Seller { get; set; }
+
     }
 }

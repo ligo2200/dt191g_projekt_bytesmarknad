@@ -42,11 +42,13 @@ namespace admin.Models {
 
 
         //reference to Sellermodel
+        [Display(Name = "Säljare")]
         public int SellerId { get; set; }
         [Display(Name = "Säljare")]
         public Seller? Seller { get; set; }
 
         // reference to Categorymodel
+        [Display(Name = "Kategori")]
         public int CategoryId { get; set; }
         [Display(Name = "Kategori")]
         public Category? Category{ get; set; }

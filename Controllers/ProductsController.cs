@@ -13,10 +13,14 @@ namespace admin.Controllers
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly string wwwRootPath;
 
-        public ProductsController(ApplicationDbContext context)
+        public ProductsController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            _hostEnvironment = hostEnvironment;
+            wwwRootPath = hostEnvironment.WebRootPath;
         }
 
         // GET: Products
@@ -49,8 +53,8 @@ namespace admin.Controllers
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId");
-            ViewData["SellerId"] = new SelectList(_context.Sellers, "SellerId", "SellerAdress");
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name");
+            ViewData["SellerId"] = new SelectList(_context.Sellers, "SellerId", "SellerName");
             return View();
         }
 
@@ -59,16 +63,33 @@ namespace admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,TypeOfProduct,Price,Size,Color,Description,ImageName,IsSold,SellerId,CategoryId")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,TypeOfProduct,Price,Size,Color,Description,ImageFile,IsSold,SellerId,CategoryId")] Product product)
         {
             if (ModelState.IsValid)
             {
+                // check for image
+                if (product.ImageFile != null) {
+                    // unique filename
+                    string fileName = Path.GetFileNameWithoutExtension(product.ImageFile.FileName);
+                    string extension = Path.GetExtension(product.ImageFile.FileName);
+
+                    product.ImageName = fileName = fileName.Replace(" ", String.Empty) + DateTime.Now.ToString("yymmssfff") + extension;
+
+                    string path = Path.Combine(wwwRootPath + "/images", fileName);
+
+                    // store in images
+                    using(var fileStream = new FileStream(path, FileMode.Create)) {
+                        await product.ImageFile.CopyToAsync(fileStream);
+                    }
+                } else {
+                    product.ImageName = "placeholder.jpg";
+                }
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", product.CategoryId);
-            ViewData["SellerId"] = new SelectList(_context.Sellers, "SellerId", "SellerAdress", product.SellerId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", product.CategoryId);
+            ViewData["SellerId"] = new SelectList(_context.Sellers, "SellerId", "SellerName", product.SellerId);
             return View(product);
         }
 
@@ -85,8 +106,8 @@ namespace admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", product.CategoryId);
-            ViewData["SellerId"] = new SelectList(_context.Sellers, "SellerId", "SellerAdress", product.SellerId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", product.CategoryId);
+            ViewData["SellerId"] = new SelectList(_context.Sellers, "SellerId", "SellerName", product.SellerId);
             return View(product);
         }
 
@@ -95,7 +116,7 @@ namespace admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,TypeOfProduct,Price,Size,Color,Description,ImageName,IsSold,SellerId,CategoryId")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,TypeOfProduct,Price,Size,Color,Description,ImageFile,ImageName,IsSold,SellerId,CategoryId")] Product product)
         {
             if (id != product.ProductId)
             {
@@ -106,6 +127,35 @@ namespace admin.Controllers
             {
                 try
                 {
+                    // check if there is a new image
+                    if (product.ImageFile != null)
+                    {
+                        // get old filename for removal of old image
+                        var oldImageName = product.ImageName;
+
+                        // generate unique name for new image
+                        string fileName = Path.GetFileNameWithoutExtension(product.ImageFile.FileName);
+                        string extension = Path.GetExtension(product.ImageFile.FileName);
+                        product.ImageName = fileName = fileName.Replace(" ", String.Empty) + DateTime.Now.ToString("yymmssfff") + extension;
+
+                        // save new image in imagesdir
+                        string path = Path.Combine(wwwRootPath + "/images", fileName);
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await product.ImageFile.CopyToAsync(fileStream);
+                        }
+
+                        // remove old image from images dir if not placeholder.
+                        if (!string.IsNullOrEmpty(oldImageName) && oldImageName != "placeholder.jpg")
+                        {
+                            var oldImagePath = Path.Combine(wwwRootPath + "/images", oldImageName);
+                            if (System.IO.File.Exists(oldImagePath))
+                            {
+                                System.IO.File.Delete(oldImagePath);
+                            }
+                        }
+                    }
+
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
@@ -122,8 +172,8 @@ namespace admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "CategoryId", product.CategoryId);
-            ViewData["SellerId"] = new SelectList(_context.Sellers, "SellerId", "SellerAdress", product.SellerId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", product.CategoryId);
+            ViewData["SellerId"] = new SelectList(_context.Sellers, "SellerId", "SellerName", product.SellerId);
             return View(product);
         }
 
