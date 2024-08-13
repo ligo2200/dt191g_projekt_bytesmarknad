@@ -6,9 +6,16 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Skapa ny produkt</a>
-</p>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <p>
+        <a asp-action="Create">Skapa ny produkt</a>
+    </p>
+    <p>
+        <a asp-controller="Categories" asp-action="Index">Se alla kategorier</a>
+    </p>
+
+</div>
+
 <table class="table">
     <thead>
         <tr>
@@ -43,42 +50,44 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.TypeOfProduct)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Size)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Color)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <a href="images/@Html.DisplayFor(modelItem => item.ImageName)" target="_blank"><img style="width: 50px" src="images/@Html.DisplayFor(modelItem => item.ImageName)" alt="Bild på klädesplagg"></a>
-                
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsSold)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Seller.SellerName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductId">Ändra</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductId">Detaljer</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductId">Radera</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TypeOfProduct)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Size)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Color)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    <a href="images/@Html.DisplayFor(modelItem => item.ImageName)" target="_blank"><img style="width: 50px"
+                            src="images/@Html.DisplayFor(modelItem => item.ImageName)" alt="Bild på klädesplagg"></a>
+
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsSold)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Seller.SellerName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Name)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ProductId">Ändra</a> |
+                    <a asp-action="Details" asp-route-id="@item.ProductId">Detaljer</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ProductId">Radera</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

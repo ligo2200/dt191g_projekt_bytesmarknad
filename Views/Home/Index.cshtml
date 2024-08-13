@@ -1,8 +1,93 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Startsida";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Välkommen!</h1>
+    <p>Detta är administratörssidan för bytesmarknaden barnens hörna.</p>
 </div>
+<div class="d-flex justify-content-center mt-5 mb-3">
+    @if (SignInManager.IsSignedIn(User))
+    {
+
+        <a class="nav-link text-dark" style="font-size: 1.5rem;" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"
+            onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';">Hej
+            @User.Identity?.Name!</a>
+
+    }
+</div>
+<section class="todo">
+    <h2 class="text-center" style="font-size: 1.7rem;">Vad vill du göra?</h2>
+
+    <div class="container my-5">
+        <div class="row">
+            <!-- Card 1: Products -->
+            <div class="col-12 col-md-4 mb-4">
+                <a href="Products" class="text-decoration-none">
+                    <div class="card text-center bg-lightblue h-100" style="border-radius: 10px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Hantera Produkter</h5>
+                            <p class="card-text">Lägg till, ändra eller ta bort produkter.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Card 2: Orders -->
+            <div class="col-12 col-md-4 mb-4">
+                <a href="Sales" class="text-decoration-none">
+                    <div class="card text-center bg-lightblue h-100" style="border-radius: 10px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Hantera Ordrar</h5>
+                            <p class="card-text">Visa och uppdatera orderstatus.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Card 3: Sellers -->
+            <div class="col-12 col-md-4 mb-4">
+                <a href="Sellers" class="text-decoration-none">
+                    <div class="card text-center bg-lightblue h-100" style="border-radius: 10px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Hantera Säljare</h5>
+                            <p class="card-text">Lägg till eller ta bort säljare.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <!-- Card 4 (centered): Register new admin -->
+            <div class="col-12 col-md-4 mb-4">
+                <a href="Identity/Account/Register" class="text-decoration-none">
+                    <div class="card text-center bg-lightblue h-100" style="border-radius: 10px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Registrera ny administratör</h5>
+                            <p class="card-text">Lägg till ny administratör till webbplatsen.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CSS Styling directly in the document -->
+<style>
+    /* Custom light blue background color */
+    .bg-lightblue {
+        background-color: #d3e8fd;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Hover effect with gradient and shadow */
+    .bg-lightblue:hover {
+        background-color: #99ccff;
+        box-shadow: 0 4px 8px rgba(0, 123, 255, 0.5);
+    }
+</style>
