@@ -20,7 +20,7 @@ namespace admin.Models {
         public string? BuyerAdress { get; set; }
 
 
-        //reference to clothingmodel
+        //reference to productmodel
         [Display(Name = "Produkt")]
         public int ProductId { get; set; }
 

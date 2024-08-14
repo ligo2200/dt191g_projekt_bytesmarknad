@@ -10,7 +10,7 @@ namespace admin.Models
         public int CategoryId { get; set; }
 
         [Display(Name = "Kategorinamn")]
-        public string? Name { get; set; }  // Ex: "Overdel", "Underdel", "Skor"
+        public string? Name { get; set; }  // Ex: "Överdel", "Underdel", "Skor"
         public ICollection<Product>? Products { get; set; }
     }
 }
