@@ -20,8 +20,8 @@ namespace admin.Api
             _context = context;
         }
 
-        // GET: api/products
-        [HttpGet]
+        // GET: api/Api/products
+        [HttpGet("products")]
         public async Task<IActionResult> GetProducts()
         {
 
@@ -35,7 +35,26 @@ namespace admin.Api
             return Ok(await _context.Products.ToListAsync());
         }
 
-        // GET: api/products/category/{categoryId}
+        // GET: api/Api/products/latest
+        [HttpGet("products/latest")]
+        public async Task<IActionResult> GetLatestProducts()
+        {
+            
+            var latestProducts = await _context.Products
+            .OrderByDescending(p => p.ProductId)
+            .Take(3)
+            .ToListAsync();
+            // check if null
+            if (_context.Products == null)
+            {
+
+                return NotFound();
+            }
+
+            return Ok(latestProducts);
+        }
+
+        // GET: api/Api/products/category/{categoryId}
         [HttpGet("products/category/{categoryId}")]
         public async Task<IActionResult> GetProductsByCategory(int categoryId)
         {
@@ -48,6 +67,30 @@ namespace admin.Api
                 .Include(p => p.Category)
                 .Where(p => p.CategoryId == categoryId)
                 .ToListAsync();
+
+            return Ok(products);
+        }
+
+        // GET: api//Api/products/category/name/{name}
+        [HttpGet("products/category/name/{name}")]
+        public async Task<IActionResult> GetProductsByCategoryName(string name)
+        {
+            if (_context.Products == null)
+            {
+                return NotFound();
+            }
+
+            // Hämta produkterna som tillhör den angivna kategorin med namnet.
+            var products = await _context.Products
+                .Include(p => p.Category)
+                .Where(p => p.Category != null && p.Category.Name == name)  // Kontrollera mot kategorinamnet
+                .ToListAsync();
+
+            // Kontrollera om några produkter hittades
+            if (products == null || products.Count == 0)
+            {
+                return NotFound($"Inga produkter hittades för kategorin {name}.");
+            }
 
             return Ok(products);
         }
@@ -112,8 +155,6 @@ namespace admin.Api
             public required string BuyerAdress { get; set; }
             public List<int> ProductIds { get; set; } = new List<int>();
         }
-
-
 
         // POST: api products
         /*[HttpPost("products/sell/{id}")]
