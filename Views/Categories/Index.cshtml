@@ -9,6 +9,8 @@
 <p>
     <a asp-action="Create">Skapa ny kategori</a>
 </p>
+
+
 <table class="table">
     <thead>
         <tr>
@@ -27,7 +29,7 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CategoryId">Ändra</a> |
                 <a asp-action="Details" asp-route-id="@item.CategoryId">Detaljer</a> |
-                <a asp-action="Delete" asp-route-id="@item.CategoryId">Radera</a>
+                <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.CategoryId">Radera</a>
             </td>
         </tr>
 }

@@ -9,57 +9,70 @@
 <p>
     <a asp-action="Create">Skapa ny försäljning</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.SaleDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SalePrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BuyerName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BuyerAdress)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Product)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Seller)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.SaleDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SalePrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BuyerName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BuyerAdress)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.TypeOfProduct)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Seller.SellerName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.SaleId">Ändra</a> |
-                <a asp-action="Details" asp-route-id="@item.SaleId">Detaljer</a> |
-                <a asp-action="Delete" asp-route-id="@item.SaleId">Radera</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<!--searchform-->
+<div class="search-saless">
+    <form method="post" class="search-form d-flex" asp-controller="Sales" asp-action="IndexWithSearch">
+        <i class="fa-solid fa-magnifying-glass mt-2 mx-2"></i>
+        <input class="form-control mr-sm-2" type="search" placeholder="Sök order" aria-label="Sök" name="searchString">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Sök</button>
+    </form>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.SaleDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SalePrice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BuyerName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.BuyerAdress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Product)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Seller)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SaleDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SalePrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BuyerName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.BuyerAdress)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Product.TypeOfProduct)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Seller.SellerName)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.SaleId">Ändra</a> |
+                        <a asp-action="Details" asp-route-id="@item.SaleId">Detaljer</a> |
+                        <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.SaleId">Radera</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

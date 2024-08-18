@@ -47,3 +47,17 @@ button.accept-policy {
   line-height: 60px;
 }
 
+@media (max-width: 768px) {
+  .search-form {
+      flex-direction: column;
+  }
+
+  .search-form input {
+      margin-bottom: 10px;
+  }
+
+  .navbar-brand img {
+      width: 50px;
+      height: auto;
+  }
+}

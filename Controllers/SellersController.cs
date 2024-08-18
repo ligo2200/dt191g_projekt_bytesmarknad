@@ -153,5 +153,29 @@ namespace admin.Controllers
         {
             return _context.Sellers.Any(e => e.SellerId == id);
         }
+
+
+        // method for searching for sellers by name and/or by id and products.
+        public async Task<IActionResult> IndexWithSearch(string searchString)
+        {
+            // select each row of sellers in database
+            var sellers = from s in _context.Sellers
+                        select s;
+
+            // if searchstring isn't empty
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                // search each row for sellername, sellerId and/or products
+                sellers = sellers.Where(s => s.SellerName.ToLower().Contains(searchString.ToLower())
+                                  || s.SellerId.ToString().Contains(searchString)
+                                  || s.Products.Any(p => p.TypeOfProduct.ToLower().Contains(searchString.ToLower())));
+            }
+
+            // eagerly load sellers data
+            sellers = sellers.Include(s => s.Products);
+
+            // return list of sellers
+            return View("Index", await sellers.ToListAsync());
+        }
     }
 }

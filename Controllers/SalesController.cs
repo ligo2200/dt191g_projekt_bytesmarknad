@@ -166,5 +166,27 @@ namespace admin.Controllers
         {
             return _context.Sales.Any(e => e.SaleId == id);
         }
+
+        // method for searching for orders by SellerName or by BuyerName.
+        public async Task<IActionResult> IndexWithSearch(string searchString)
+        {
+            // select each row of sales in database
+            var sales = from s in _context.Sales
+                        select s;
+
+            // if searchstring isn't empty
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                // search each row for sellername or buyernamr
+                sales = sales.Where(s => s.BuyerName.ToLower().Contains(searchString.ToLower())
+                              || s.Seller.SellerName.ToLower().Contains(searchString.ToLower()));
+            }
+
+            // eagerly load orders data
+             sales = sales.Include(s => s.Seller);
+
+            // return list of orders
+            return View("Index", await sales.ToListAsync());
+        }
     }
 }

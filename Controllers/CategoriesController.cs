@@ -153,5 +153,27 @@ namespace admin.Controllers
         {
             return _context.Categories.Any(e => e.CategoryId == id);
         }
+
+        /*    
+        // method for searching for categories
+        public async Task<IActionResult> IndexWithSearch(string searchString)
+        {
+            // select each row of categories in database
+            var categories = from c in _context.Categories
+                        select c;
+
+            // if searchstring isn't empty
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                // search each row for category
+                categories = categories.Where(c => c.Name.ToLower().Contains(searchString.ToLower()));
+            }
+
+            // eagerly load category data
+            categories = categories.Include(s => s.Products);
+
+            // return list of sellerss
+            return View("Index", await categories.ToListAsync());
+        }*/
     }
 }

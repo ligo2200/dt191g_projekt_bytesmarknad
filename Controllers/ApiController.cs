@@ -39,19 +39,59 @@ namespace admin.Api
         [HttpGet("products/latest")]
         public async Task<IActionResult> GetLatestProducts()
         {
-            
-            var latestProducts = await _context.Products
-            .OrderByDescending(p => p.ProductId)
-            .Take(3)
-            .ToListAsync();
             // check if null
             if (_context.Products == null)
             {
 
                 return NotFound();
             }
+            
+            var latestProducts = await _context.Products
+            .OrderByDescending(p => p.ProductId)
+            .Take(3)
+            .ToListAsync();
+            
 
             return Ok(latestProducts);
+        }
+
+        // GET: api/Api/categories
+        [HttpGet("categories")]
+        public async Task<IActionResult> GetCategories()
+        {
+
+            // check if null
+            if (_context.Categories == null)
+            {
+
+                return NotFound();
+            }
+
+            return Ok(await _context.Categories.ToListAsync());
+        }
+
+        // GET: api/Api/categories{categoryId}
+        [HttpGet("categories/{categoryId}")]
+        public async Task<IActionResult> GetCategoriesById(int categoryId)
+        {
+
+            // check if null
+            if (_context.Categories == null)
+            {
+
+                return NotFound();
+            }
+
+            var category = await _context.Categories
+                .FirstOrDefaultAsync(p => p.CategoryId == categoryId);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+
+            return Ok(category);
         }
 
         // GET: api/Api/products/category/{categoryId}
@@ -62,11 +102,17 @@ namespace admin.Api
             {
                 return NotFound();
             }
-
+    
             var products = await _context.Products
                 .Include(p => p.Category)
                 .Where(p => p.CategoryId == categoryId)
                 .ToListAsync();
+
+            // check if category has products
+            if (products == null || products.Count == 0)
+            {
+                return NotFound($"Inga produkter i denna kategori {categoryId}.");
+            }
 
             return Ok(products);
         }
@@ -112,7 +158,7 @@ namespace admin.Api
         }
 
 
-        // POST: api/orders
+        // POST: api/Api/orders
         [HttpPost("orders")]
         public async Task<IActionResult> CreateOrder([FromBody] OrderRequest orderRequest)
         {

@@ -68,7 +68,8 @@ namespace admin.Controllers
             if (ModelState.IsValid)
             {
                 // check for image
-                if (product.ImageFile != null) {
+                if (product.ImageFile != null)
+                {
                     // unique filename
                     string fileName = Path.GetFileNameWithoutExtension(product.ImageFile.FileName);
                     string extension = Path.GetExtension(product.ImageFile.FileName);
@@ -78,10 +79,13 @@ namespace admin.Controllers
                     string path = Path.Combine(wwwRootPath + "/images", fileName);
 
                     // store in images
-                    using(var fileStream = new FileStream(path, FileMode.Create)) {
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
                         await product.ImageFile.CopyToAsync(fileStream);
                     }
-                } else {
+                }
+                else
+                {
                     product.ImageName = "placeholder.jpg";
                 }
                 _context.Add(product);
@@ -215,6 +219,32 @@ namespace admin.Controllers
         private bool ProductExists(int id)
         {
             return _context.Products.Any(e => e.ProductId == id);
+        }
+
+        // method for searching for products by typeofproduct, color, size, sellername or category.
+        public async Task<IActionResult> IndexWithSearch(string searchString)
+        {
+            // select each row of products in database
+            var products = from p in _context.Products
+                           select p;
+
+            // if searchstring isn't empty
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                // search each row for typeofproduct, color, size, sellername or categoryname
+                products = products.Where(p => p.TypeOfProduct.ToLower().Contains(searchString.ToLower())
+                                    || p.Color.ToLower().Contains(searchString.ToLower())
+                                    || p.Size.ToLower().Contains(searchString.ToLower())
+                                    || p.Seller.SellerName.ToLower().Contains(searchString.ToLower())
+                                    || p.Category.Name.ToLower().Contains(searchString.ToLower()));
+            }
+
+            // eagerly load products data
+            products = products.Include(p => p.Seller)
+                       .Include(p => p.Category);
+
+            // return list of products
+            return View("Index", await products.ToListAsync());
         }
     }
 }
